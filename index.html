@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MycoEd | Media Pembelajaran Interaktif Biologi Kelas X</title>
+<style>
+  :root{
+    --merah:#c62828; --merah-tua:#8c1c13; --krem:#fff8ea; --coklat:#8a5a3b;
+    --oranye:#e8590c; --kuning:#f5b800; --putih:#fff; --teks:#2b2b2b; --abu:#f6e6cc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:var(--krem);color:var(--teks);line-height:1.65}
+  header{background:linear-gradient(135deg,var(--merah-tua),var(--merah) 50%,var(--oranye));color:#fff;padding:36px 20px;text-align:center;border-bottom:8px solid var(--kuning)}
+  header h1{font-size:clamp(1.6rem,5vw,2.6rem)}
+  header p{opacity:.9;margin-top:6px}
+  nav{position:sticky;top:0;z-index:10;background:var(--putih);box-shadow:0 2px 6px rgba(0,0,0,.1);
+      display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:8px}
+  nav button{border:none;background:var(--abu);padding:8px 14px;border-radius:20px;cursor:pointer;font-size:.95rem;font-weight:600;color:var(--merah-tua)}
+  nav button.aktif,nav button:hover{background:var(--merah);color:#fff}
+  main{max-width:900px;margin:0 auto;padding:22px 16px 60px}
+  section{display:none;animation:muncul .3s}
+  section.aktif{display:block}
+  @keyframes muncul{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h2{color:var(--merah-tua);margin:6px 0 12px;font-size:1.6rem}
+  h3{color:var(--coklat);margin:16px 0 6px}
+  .kartu{background:var(--putih);border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+  ul{margin:6px 0 6px 22px}
+  .tujuan{border-left:6px solid var(--oranye)}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;font-size:.93rem}
+  th,td{padding:10px;border-bottom:1px solid var(--abu);text-align:left;vertical-align:top}
+  th{background:var(--merah);color:#fff}
+  .tabel-wrap{overflow-x:auto}
+  .diagram{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center}
+  .diagram svg{max-width:480px;width:100%;height:auto}
+  .hotspot{cursor:pointer;transition:filter .2s}
+  .hotspot:hover{filter:brightness(1.15)}
+  #infoBagian{flex:1;min-width:240px;min-height:150px}
+  .lencana{display:inline-block;background:var(--merah);color:#fff;border-radius:12px;padding:2px 10px;font-size:.8rem;margin-right:4px}
+  .peran{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .untung{border-top:5px solid var(--kuning)} .rugi{border-top:5px solid #c0392b}
+  .aseks{border-top:5px solid var(--kuning)} .seks{border-top:5px solid var(--oranye)}
+  .alur{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0;font-size:.9rem}
+  .alur span{background:var(--abu);padding:4px 12px;border-radius:14px;font-weight:700;color:var(--merah-tua)}
+  .alur span+span::before{content:"→ ";color:var(--oranye)}
+  .tahap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px 12px;margin-top:18px}
+  .tahap{position:relative;background:#fff6dc;border-radius:14px;padding:16px 12px 12px;text-align:center;border-top:5px solid var(--oranye)}
+  .tahap .no{position:absolute;top:-16px;left:12px;background:var(--merah);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .tahap svg{width:100%;height:auto;max-width:210px}
+  .tahap h4{color:var(--merah-tua);margin:4px 0 2px;font-size:1.05rem}
+  .tahap p{font-size:.88rem;text-align:left}
+  .miskonsep{list-style:none;margin-left:0}
+  .miskonsep li{margin:10px 0;padding-left:0}
+  details{background:#fff;border-radius:10px;padding:10px 14px;margin:8px 0;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  summary{cursor:pointer;font-weight:700;color:var(--merah-tua)}
+  .soal{margin:16px 0}
+  .opsi{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:2px solid var(--abu);
+        background:#fff;border-radius:10px;cursor:pointer;font-size:1rem}
+  .opsi:hover{border-color:var(--merah)}
+  .opsi.benar{background:#d8f3e0;border-color:#2e7d4f}
+  .opsi.salah{background:#fbdcd8;border-color:#c0392b}
+  .penjelasan{font-size:.9rem;margin-top:4px;color:#444;display:none}
+  .btn{background:var(--oranye);color:#fff;border:none;padding:10px 22px;border-radius:24px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:12px}
+  .btn:hover{opacity:.9}
+  #hasil{font-size:1.2rem;font-weight:700;margin-top:14px}
+  .slot-foto{margin:12px 0}
+  .slot-foto figure{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  .slot-foto img{display:block;max-width:100%;max-height:420px;width:auto;height:auto;margin:0 auto;object-fit:contain}
+  .slot-foto figcaption{padding:8px 12px;font-size:.88rem;color:#555;text-align:center}
+  .kosong{border:3px dashed #c9bd9f;border-radius:12px;padding:26px 14px;text-align:center;color:#8a7d60;background:#faf5e8;font-size:.92rem}
+  .foto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:10px}
+  .foto-grid .slot-foto{margin:0}
+  .memori{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:520px;margin:12px auto}
+  .kartu-m{aspect-ratio:1/1;perspective:600px;cursor:pointer;border:none;background:none;padding:0}
+  .kartu-m .dalam{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+  .kartu-m.buka .dalam{transform:rotateY(180deg)}
+  .muka{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center;border-radius:10px;padding:4px;text-align:center;font-size:.78rem;font-weight:700}
+  .depan{background:var(--merah);color:#fff;font-size:1.6rem}
+  .belakang{background:#fff;border:2px solid var(--oranye);transform:rotateY(180deg);color:var(--merah-tua)}
+  .kartu-m.cocok .belakang{background:#fff3bf;border-color:var(--kuning)}
+  .bar{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:8px}
+  .flash{max-width:480px;margin:12px auto;min-height:170px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;background:#fff;border:3px solid var(--merah);border-radius:16px;cursor:pointer;font-size:1.3rem;font-weight:700;color:var(--merah-tua)}
+  .flash.balik{background:#fff3e3;border-color:var(--oranye);font-size:1rem;font-weight:400;color:var(--teks)}
+  .game-luar iframe{width:100%;height:480px;border:0;border-radius:12px;background:#fff}
+  footer{text-align:center;padding:20px;background:var(--merah-tua);color:#ffe8cc;font-size:.85rem;border-top:8px solid var(--kuning)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍄 MycoEd</h1>
+  <p>Media Pembelajaran Interaktif Biologi · Fungi (Jamur) · Kelas X SMA</p>
+</header>
+
+<nav id="menu">
+  <button class="aktif" data-tab="beranda">Beranda</button>
+  <button data-tab="ciri">Ciri &amp; Struktur</button>
+  <button data-tab="reproduksi">Reproduksi</button>
+  <button data-tab="klasifikasi">Klasifikasi</button>
+  <button data-tab="peran">Peran Jamur</button>
+  <button data-tab="game">Game</button>
+  <button data-tab="kuis">Kuis</button>
+</nav>
+
+<main>
+
+<!-- BERANDA -->
+<section id="beranda" class="aktif">
+  <h2>Selamat Datang!</h2>
+  <div class="kartu tujuan">
+    <h3>Tujuan Pembelajaran</h3>
+    <ul>
+      <li>Murid mampu mendeskripsikan karakteristik jamur dalam kehidupan.</li>
+      <li>Murid mampu mendeskripsikan peranan jamur dalam kehidupan.</li>
+    </ul>
+  </div>
+  <div class="kartu tujuan">
+    <h3>Keterampilan Proses</h3>
+    <p>Mampu menerapkan keterampilan proses meliputi:</p>
+    <ul>
+      <li>Mengamati</li>
+      <li>Mempertanyakan dan Memprediksi</li>
+      <li>Merencanakan dan Melakukan Penyelidikan</li>
+      <li>Memproses, Menganalisis Data dan Informasi</li>
+      <li>Mengevaluasi dan Refleksi</li>
+      <li>Mengomunikasikan hasil</li>
+    </ul>
+  </div>
+  <div class="kartu">
+    <h3>Pertanyaan Pemantik 🤔</h3>
+    <p>Perhatikan gambar di bawah ini. Menurut kalian, apa yang terjadi pada buah melon tersebut?</p>
+    <div class="slot-foto" data-file="foto/kapang-makanan.jpg" data-cap="Dokumentasi pribadi, 2026"></div>
+  </div>
+  <div class="kartu">
+    <h3>Cara Belajar</h3>
+    <p>Buka menu satu per satu dari kiri ke kanan. Klik bagian-bagian pada gambar jamur, buka kotak-kotak informasi, lalu uji pemahamanmu di menu <b>Kuis</b>.</p>
+  </div>
+</section>
+
+<!-- CIRI -->
+<section id="ciri">
+  <h2>Ciri &amp; Struktur Tubuh Jamur</h2>
+  <div class="kartu">
+    <h3>Ciri-ciri Umum</h3>
+    <ul>
+      <li>Eukariotik (punya inti sel sejati) dan umumnya multiseluler; ragi bersifat uniseluler.</li>
+      <li>Heterotrof: tidak berklorofil, menyerap nutrisi dari lingkungan (saprofit, parasit, atau simbiosis).</li>
+      <li>Dinding sel tersusun dari <b>kitin</b>.</li>
+      <li>Tubuh tersusun dari benang-benang halus bernama <b>hifa</b>.</li>
+      <li>Berkembang biak dengan spora.</li>
+    </ul>
+  </div>
+
+  <h3>🔍 Diagram Interaktif: Klik bagian jamur!</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 440 330" role="img" aria-label="Diagram bagian-bagian jamur payung beserta namanya">
+      <defs>
+        <marker id="panah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0L10 5L0 10z" fill="#7f1d1d" stroke="#fff" stroke-width="1.2"/>
+        </marker>
+      </defs>
+      <rect width="440" height="330" rx="16" fill="#f3ead7"/>
+      <!-- tanah -->
+      <path d="M0 270 Q75 255 150 270 T300 270 T440 270 V330 H0Z" fill="#8a5a3b"/>
+      <!-- miselium -->
+      <g class="hotspot" data-info="miselium" stroke="#f7f1e3" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M150 272 Q110 295 60 290"/><path d="M150 272 Q190 300 245 292"/>
+        <path d="M150 272 Q140 305 110 318"/><path d="M150 272 Q170 305 200 318"/>
+        <path d="M100 291 Q85 305 70 312"/><path d="M215 296 Q235 308 255 312"/>
+      </g>
+      <!-- batang -->
+      <g class="hotspot" data-info="batang">
+        <rect x="132" y="150" width="36" height="125" rx="14" fill="#f4eee0" stroke="#cdbf9e" stroke-width="2"/>
+      </g>
+      <!-- cincin -->
+      <g class="hotspot" data-info="cincin">
+        <path d="M126 178 Q150 192 174 178 L172 190 Q150 204 128 190Z" fill="#e2d6b8" stroke="#bfae86"/>
+      </g>
+      <!-- tudung -->
+      <g class="hotspot" data-info="tudung">
+        <path d="M45 155 Q45 40 150 40 Q255 40 255 155 Z" fill="#d9503f"/>
+        <circle cx="105" cy="85" r="10" fill="#fff" opacity=".85"/>
+        <circle cx="175" cy="70" r="12" fill="#fff" opacity=".85"/>
+        <circle cx="210" cy="115" r="8" fill="#fff" opacity=".85"/>
+        <circle cx="130" cy="120" r="7" fill="#fff" opacity=".85"/>
+      </g>
+      <!-- bilah -->
+      <g class="hotspot" data-info="bilah">
+        <path d="M45 155 H255 L240 168 H60Z" fill="#c9a97a" stroke="#8a5a3b"/>
+        <g stroke="#8a5a3b" stroke-width="1.2"><path d="M80 158V166"/><path d="M110 158V167"/><path d="M140 158V168"/><path d="M170 158V168"/><path d="M200 158V167"/><path d="M225 158V166"/></g>
+      </g>
+      <!-- label dan panah -->
+      <g class="hotspot" data-info="tudung">
+        <path d="M298 62 L232 100" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M298 62 L232 100" stroke="#7f1d1d" stroke-width="1.6" fill="none" marker-end="url(#panah)"/>
+        <text x="304" y="67" font-size="14" font-weight="700" fill="#7f1d1d">Tudung (pileus)</text>
+      </g>
+      <g class="hotspot" data-info="bilah">
+        <path d="M298 148 L242 162" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M298 148 L242 162" stroke="#7f1d1d" stroke-width="1.6" fill="none" marker-end="url(#panah)"/>
+        <text x="304" y="153" font-size="14" font-weight="700" fill="#7f1d1d">Bilah (lamela)</text>
+      </g>
+      <g class="hotspot" data-info="cincin">
+        <path d="M298 196 L170 187" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M298 196 L170 187" stroke="#7f1d1d" stroke-width="1.6" fill="none" marker-end="url(#panah)"/>
+        <text x="304" y="201" font-size="14" font-weight="700" fill="#7f1d1d">Cincin (annulus)</text>
+      </g>
+      <g class="hotspot" data-info="batang">
+        <path d="M298 244 L162 236" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M298 244 L162 236" stroke="#7f1d1d" stroke-width="1.6" fill="none" marker-end="url(#panah)"/>
+        <text x="304" y="249" font-size="14" font-weight="700" fill="#7f1d1d">Batang (stipe)</text>
+      </g>
+      <g class="hotspot" data-info="miselium">
+        <path d="M298 302 L198 292" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M298 302 L198 292" stroke="#7f1d1d" stroke-width="1.6" fill="none" marker-end="url(#panah)"/>
+        <text x="304" y="307" font-size="14" font-weight="700" fill="#fff">Miselium (hifa)</text>
+      </g>
+      <text x="150" y="25" text-anchor="middle" font-size="12" fill="#7f1d1d" font-weight="700">Jamur Basidiomycota</text>
+    </svg>
+    <div id="infoBagian" class="kartu">
+      <b>Petunjuk:</b> klik gambar atau nama bagian (tudung, bilah, cincin, batang, miselium) untuk melihat penjelasannya.
+    </div>
+  </div>
+
+  <h3>Jenis Hifa</h3>
+  <div class="kartu">
+    <ul>
+      <li><b>Hifa bersekat (septat)</b>: dibatasi dinding melintang (septa) yang berpori. Contoh: Ascomycota dan Basidiomycota.</li>
+      <li><b>Hifa tidak bersekat (senositik/koenositik)</b>: tidak ada sekat, inti tersebar dalam sitoplasma yang menyatu. Contoh: <i>Rhizopus</i>.</li>
+    </ul>
+    <p><b>Miselium</b> adalah kumpulan hifa yang membentuk jalinan seperti anyaman.</p>
+  </div>
+</section>
+
+<!-- REPRODUKSI -->
+<section id="reproduksi">
+  <h2>Reproduksi Jamur</h2>
+  <div class="kartu tujuan">
+    <p>Jamur berkembang biak dengan <b>dua cara</b>: <b>aseksual (vegetatif)</b> dan <b>seksual (generatif)</b>. Kedua cara ini menghasilkan spora, tetapi <b>jenis spora, proses, dan hasilnya berbeda</b>. Perhatikan perbedaannya agar tidak tertukar.</p>
+  </div>
+
+  <div class="peran">
+    <div class="kartu aseks">
+      <h3>🌱 1. Aseksual (vegetatif)</h3>
+      <p><b>Tanpa</b> peleburan sel atau inti, dan <b>tanpa meiosis</b>. Keturunan identik dengan induknya, terbentuk cepat dan banyak, umumnya saat lingkungan menguntungkan.</p>
+      <ul>
+        <li><b>Pertunasan</b>: pada ragi (<i>Saccharomyces</i>), tunas tumbuh dari sel induk.</li>
+        <li><b>Fragmentasi</b>: hifa terputus, tiap potongan tumbuh menjadi individu baru.</li>
+        <li><b>Spora aseksual</b>:
+          <ul>
+            <li><b>Sporangiospora</b>: di dalam sporangium (Zygomycota).</li>
+            <li><b>Konidia</b>: di ujung hifa khusus (konidiofor), tidak di dalam kantong (Ascomycota dan Deuteromycota).</li>
+            <li><b>Klamidospora</b>: spora istirahat berdinding tebal dari sel hifa.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="kartu seks">
+      <h3>🧬 2. Seksual (generatif)</h3>
+      <p>Terjadi bila dua hifa yang kompatibel (tipe kawin berbeda) bertemu. Prosesnya <b>melibatkan peleburan sel dan inti</b> dan menghasilkan variasi genetik.</p>
+      <div class="alur"><span>Plasmogami</span><span>Kariogami</span><span>Meiosis</span><span>Spora seksual</span></div>
+      <ul>
+        <li><b>Plasmogami</b>: sitoplasma dua hifa melebur.</li>
+        <li><b>Kariogami</b>: inti kedua hifa melebur.</li>
+        <li><b>Meiosis</b>: membentuk spora seksual dengan kombinasi gen baru.</li>
+      </ul>
+      <p style="font-size:.9rem">Spora seksual: <b>zigospora</b>, <b>askospora</b>, <b>basidiospora</b>.</p>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>📷 Pengamatan: hifa dan klamidospora</h3>
+    <div class="foto-grid">
+      <div class="slot-foto" data-file="foto/reproduksi-hifa.jpg" data-cap="Hifa jamur bercabang di bawah mikroskop. Dari hifa seperti inilah spora terbentuk.<br>Dokumentasi pribadi, 2026"></div>
+      <div class="slot-foto" data-file="foto/rhizoctonia-klamidospora.png" data-cap="Hifa <i>Rhizoctonia</i> sp. dengan pewarnaan; huruf c: klamidospora (spora aseksual).<br>Dokumentasi pribadi, 2026"></div>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>📊 Perbandingan Reproduksi Tiap Divisi</h3>
+    <div class="tabel-wrap">
+    <table>
+      <tr><th>Divisi</th><th>Spora aseksual</th><th>Spora seksual (generatif)</th><th>Tempat spora seksual terbentuk</th></tr>
+      <tr><td><b>Zygomycota</b></td><td>Sporangiospora (dalam sporangium)</td><td><b>Zigospora</b></td><td>Zigosporangium, hasil konjugasi dua hifa (+) dan (−)</td></tr>
+      <tr><td><b>Ascomycota</b></td><td>Konidia (pada konidiofor)</td><td><b>Askospora</b></td><td>Askus (kantong) di dalam tubuh buah (askokarp)</td></tr>
+      <tr><td><b>Basidiomycota</b></td><td>Jarang membentuk spora aseksual</td><td><b>Basidiospora</b></td><td>Basidium (gada) pada bilah di bawah tudung</td></tr>
+      <tr><td><b>Deuteromycota</b></td><td>Konidia</td><td><b>Tidak diketahui</b></td><td>-</td></tr>
+    </table>
+    </div>
+    <p style="font-size:.9rem;margin-top:8px">Deuteromycota (jamur imperfecti) adalah kelompok jamur yang <b>fase seksualnya belum diketahui</b>, sehingga hanya diamati berkembang biak secara aseksual. Jika fase seksualnya ditemukan, jamur itu dipindahkan ke Ascomycota atau Basidiomycota.</p>
+  </div>
+
+  <div class="kartu">
+    <h3>🧬 Skema Tahapan Reproduksi Seksual (contoh: Zygomycota)</h3>
+    <div class="alur"><span>Plasmogami</span><span>Kariogami</span><span>Meiosis</span><span>Spora seksual</span></div>
+    <div class="tahap-grid">
+
+      <div class="tahap">
+        <div class="no">1</div>
+        <svg viewBox="0 0 160 110" role="img" aria-label="Plasmogami: ujung hifa positif dan negatif melebur, sitoplasma menyatu, inti masih dua">
+          <rect x="4" y="45" width="66" height="18" rx="9" fill="#f08c00"/>
+          <rect x="90" y="45" width="66" height="18" rx="9" fill="#fcc419"/>
+          <ellipse cx="80" cy="54" rx="28" ry="14" fill="#f9b34a"/>
+          <circle cx="70" cy="54" r="5.5" fill="#9b1c1c"/>
+          <circle cx="90" cy="54" r="5.5" fill="#6b3e1a"/>
+          <text x="34" y="36" font-size="12" font-weight="700" fill="#7f1d1d" text-anchor="middle">(+)</text>
+          <text x="126" y="36" font-size="12" font-weight="700" fill="#7f1d1d" text-anchor="middle">(−)</text>
+          <text x="70" y="82" font-size="10" font-weight="700" fill="#7f1d1d" text-anchor="middle">n</text>
+          <text x="90" y="82" font-size="10" font-weight="700" fill="#7f1d1d" text-anchor="middle">n</text>
+        </svg>
+        <h4>Plasmogami</h4>
+        <p>Ujung hifa (+) dan (−) melebur. Sitoplasma menyatu, tetapi kedua inti haploid (n) masih terpisah.</p>
+      </div>
+
+      <div class="tahap">
+        <div class="no">2</div>
+        <svg viewBox="0 0 160 110" role="img" aria-label="Kariogami: dua inti melebur menjadi satu inti diploid, terbentuk zigospora berdinding tebal">
+          <rect x="4" y="47" width="42" height="16" rx="8" fill="#f08c00"/>
+          <rect x="114" y="47" width="42" height="16" rx="8" fill="#fcc419"/>
+          <circle cx="80" cy="55" r="30" fill="#5b3a29" stroke="#3a2416" stroke-width="3"/>
+          <g fill="#3a2416"><circle cx="112" cy="55" r="4"/><circle cx="102.6" cy="77.6" r="4"/><circle cx="80" cy="87" r="4"/><circle cx="57.4" cy="77.6" r="4"/><circle cx="48" cy="55" r="4"/><circle cx="57.4" cy="32.4" r="4"/><circle cx="80" cy="23" r="4"/><circle cx="102.6" cy="32.4" r="4"/></g>
+          <circle cx="80" cy="55" r="13" fill="#9b1c1c"/>
+          <text x="80" y="59" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2n</text>
+        </svg>
+        <h4>Kariogami</h4>
+        <p>Kedua inti melebur menjadi satu inti diploid (2n). Terbentuk zigospora berdinding tebal dan tahan kondisi buruk.</p>
+      </div>
+
+      <div class="tahap">
+        <div class="no">3</div>
+        <svg viewBox="0 0 160 110" role="img" aria-label="Meiosis: zigospora berkecambah, inti diploid membelah menjadi inti haploid">
+          <path d="M80 46 L80 16" stroke="#5b3a29" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <circle cx="80" cy="74" r="28" fill="#5b3a29" stroke="#3a2416" stroke-width="3"/>
+          <g fill="#c62828"><circle cx="69" cy="65" r="6"/><circle cx="91" cy="65" r="6"/><circle cx="69" cy="85" r="6"/><circle cx="91" cy="85" r="6"/></g>
+          <g font-size="8" font-weight="700" fill="#fff" text-anchor="middle"><text x="69" y="68">n</text><text x="91" y="68">n</text><text x="69" y="88">n</text><text x="91" y="88">n</text></g>
+        </svg>
+        <h4>Meiosis</h4>
+        <p>Saat kondisi cocok, zigospora berkecambah. Inti diploid (2n) membelah secara meiosis menjadi inti-inti haploid (n).</p>
+      </div>
+
+      <div class="tahap">
+        <div class="no">4</div>
+        <svg viewBox="0 0 160 110" role="img" aria-label="Spora seksual: sporangium berisi spora haploid yang dilepaskan">
+          <circle cx="80" cy="93" r="14" fill="#5b3a29" stroke="#3a2416" stroke-width="2"/>
+          <path d="M80 80 L80 48" stroke="#5b3a29" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <circle cx="80" cy="30" r="23" fill="#ffe08a" stroke="#c77700" stroke-width="2.5"/>
+          <g fill="#9b1c1c"><circle cx="70" cy="23" r="3.2"/><circle cx="81" cy="18" r="3.2"/><circle cx="91" cy="24" r="3.2"/><circle cx="64" cy="33" r="3.2"/><circle cx="75" cy="31" r="3.2"/><circle cx="86" cy="32" r="3.2"/><circle cx="96" cy="36" r="3.2"/><circle cx="72" cy="41" r="3.2"/><circle cx="83" cy="42" r="3.2"/><circle cx="92" cy="43" r="3.2"/></g>
+          <g fill="#9b1c1c"><circle cx="122" cy="26" r="3.2"/><circle cx="132" cy="44" r="3.2"/><circle cx="122" cy="62" r="3.2"/><circle cx="36" cy="46" r="3.2"/><circle cx="26" cy="64" r="3.2"/></g>
+          <text x="134" y="30" font-size="10" font-weight="700" fill="#7f1d1d">n</text>
+        </svg>
+        <h4>Spora seksual</h4>
+        <p>Terbentuk sporangium berisi spora haploid (n). Spora dilepas dan tumbuh menjadi hifa baru.</p>
+      </div>
+
+    </div>
+    <p style="font-size:.85rem;margin-top:12px"><i>Ilustrasi skematis dan disederhanakan (jumlah inti dan bentuk struktur tidak sesuai ukuran sebenarnya). Pada Zygomycota, zigospora (2n) terbentuk setelah kariogami, dan meiosis terjadi ketika zigospora berkecambah. Ascomycota dan Basidiomycota membentuk askospora dan basidiospora.</i></p>
+  </div>
+
+  <div class="kartu tujuan">
+    <h3>⚠️ Awas Miskonsep!</h3>
+    <ul class="miskonsep">
+      <li>❌ <i>Semua jamur memiliki konidia.</i><br>✅ Konidia hanya pada Ascomycota dan Deuteromycota. Zygomycota membentuk <b>sporangiospora</b>.</li>
+      <li>❌ <i>Konidia adalah spora seksual.</i><br>✅ Konidia adalah spora <b>aseksual</b>, terbentuk tanpa peleburan inti dan tanpa meiosis.</li>
+      <li>❌ <i>Semua divisi jamur bereproduksi secara seksual.</i><br>✅ Pada <b>Deuteromycota</b> fase seksual belum diketahui, jadi hanya aseksual yang teramati.</li>
+      <li>❌ <i>Zigospora, askospora, dan basidiospora adalah spora aseksual.</i><br>✅ Ketiganya adalah spora <b>seksual</b>, terbentuk melalui proses plasmogami dan kariogami.</li>
+    </ul>
+  </div>
+
+  <details>
+    <summary>🧠 Cek pemahaman: apa yang membedakan konidia dan askospora?</summary>
+    <p>Keduanya dihasilkan Ascomycota, tetapi <b>konidia</b> adalah spora <b>aseksual</b> (tanpa peleburan inti, di ujung konidiofor), sedangkan <b>askospora</b> adalah spora <b>seksual</b> (hasil plasmogami, kariogami, dan meiosis, di dalam askus).</p>
+  </details>
+  <details>
+    <summary>💡 Coba pikirkan: mengapa jamur memiliki dua cara reproduksi?</summary>
+    <p>Reproduksi aseksual cepat dan menghasilkan banyak individu saat kondisi baik. Reproduksi seksual menghasilkan variasi genetik, dan sebagian spora seksual (misalnya zigospora yang berdinding tebal) tahan terhadap kondisi lingkungan yang kurang menguntungkan.</p>
+  </details>
+  <details>
+    <summary>💡 Coba pikirkan: mengapa spora jamur sangat mudah menyebar?</summary>
+    <p>Spora berukuran sangat kecil dan ringan sehingga mudah terbawa angin, air, atau hewan. Dalam kondisi cocok (lembap, hangat, ada nutrisi), spora berkecambah menjadi hifa baru.</p>
+  </details>
+</section>
+
+<!-- KLASIFIKASI -->
+<section id="klasifikasi">
+  <h2>Klasifikasi Jamur</h2>
+  <p>Klik tiap kotak untuk membuka detailnya.</p>
+
+  <details>
+    <summary>🍞 Zygomycota (jamur zigot)</summary>
+    <ul>
+      <li>Hifa tidak bersekat (senositik).</li>
+      <li>Reproduksi aseksual: sporangiospora. Seksual: konjugasi → zigospora.</li>
+      <li>Contoh: <i>Rhizopus oligosporus</i> (tempe), <i>Rhizopus oryzae/stolonifer</i> (kapang roti).</li>
+    </ul>
+    <div class="foto-grid">
+      <div class="slot-foto" data-file="foto/rhizopus-mikroskopis-arini.jpg" data-cap="Mikroskopis <i>Rhizopus</i> sp.<br>(Arini <i>et al.</i>, 2026)"></div>
+      <div class="slot-foto" data-file="foto/rhizopus-koloni-arini.jpg" data-cap="<i>Rhizopus</i> sp.<br>(Arini <i>et al.</i>, 2026)"></div>
+    </div>
+    <div class="slot-foto" data-file="foto/rhizopus.jpg" data-cap="<i>Rhizopus</i> pada praktikum<br>Dokumentasi pribadi, 2026"></div>
+  </details>
+  <details>
+    <summary>🍷 Ascomycota (jamur kantong)</summary>
+    <ul>
+      <li>Hifa bersekat; ada yang uniseluler (ragi) dan multiseluler.</li>
+      <li>Spora seksual (askospora) terbentuk dalam kantong (askus); aseksual dengan konidia.</li>
+      <li>Contoh: <i>Saccharomyces cerevisiae</i> (roti, tape), <i>Neurospora crassa</i> (oncom), <i>Penicillium</i>, <i>Aspergillus</i>, dan <i>Cladosporium cladosporioides</i>.</li>
+    </ul>
+    <div class="foto-grid">
+      <div class="slot-foto" data-file="foto/cladosporium-mikroskopis.jpg" data-cap="Mikroskopis <i>Cladosporium cladosporioides</i><br>Dokumentasi pribadi, 2026"></div>
+      <div class="slot-foto" data-file="foto/cladosporium-koloni.jpg" data-cap="<i>Cladosporium cladosporioides</i><br>Dokumentasi pribadi, 2026"></div>
+    </div>
+  </details>
+  <details>
+    <summary>🍄 Basidiomycota (jamur gada)</summary>
+    <ul>
+      <li>Hifa bersekat; tubuh buah berukuran besar (jamur payung).</li>
+      <li>Spora seksual (basidiospora) terbentuk pada basidium di bilah-bilah tudung.</li>
+      <li>Contoh: <i>Volvariella volvacea</i> (jamur merang), <i>Pleurotus ostreatus</i> (jamur tiram), <i>Auricularia</i> (jamur kuping), <i>Amanita</i> (beracun).</li>
+    </ul>
+    <div class="slot-foto" data-file="foto/enoki.jpg" data-cap="Jamur enoki<br>Dokumentasi pribadi, 2026"></div>
+  </details>
+  <details>
+    <summary>🧪 Jamur imperfecti (Deuteromycota)</summary>
+    <p>Kelompok lama untuk jamur yang fase seksualnya belum diketahui, sehingga hanya berkembang biak secara aseksual (umumnya dengan konidia). Pada klasifikasi modern, banyak anggotanya dipindahkan ke Ascomycota atau Basidiomycota. Contoh: <i>Candida albicans</i>, <i>Trichophyton</i>, <i>Rhizoctonia</i> sp., dan <i>Mycelia sterilia</i> (jamur steril yang tidak membentuk spora).</p>
+    <div class="foto-grid">
+      <div class="slot-foto" data-file="foto/mycelia-mikroskopis.jpg" data-cap="Mikroskopis <i>Mycelia sterilia</i><br>Dokumentasi pribadi, 2026"></div>
+      <div class="slot-foto" data-file="foto/mycelia-koloni.jpg" data-cap="<i>Mycelia sterilia</i><br>Dokumentasi pribadi, 2026"></div>
+    </div>
+  </details>
+  <details>
+    <summary>🤝 Simbiosis: Lichen &amp; Mikoriza</summary>
+    <ul>
+      <li><b>Lichen (lumut kerak)</b>: simbiosis mutualisme jamur dengan alga/sianobakteri. Jamur memberi perlindungan dan air, alga membuat makanan lewat fotosintesis.</li>
+      <li><b>Mikoriza</b>: simbiosis jamur dengan akar tumbuhan. Jamur membantu menyerap air dan mineral, tumbuhan memberi hasil fotosintesis.</li>
+    </ul>
+    <div class="foto-grid">
+      <div class="slot-foto" data-file="foto/lichen.jpg" data-cap="Lichen (lumut kerak)<br>Dokumentasi pribadi, 2026"></div>
+      <div class="slot-foto" data-file="foto/lichen-mikroskopis.jpg" data-cap="Mikroskopis lichen: hifa jamur dan sel alga<br>Dokumentasi pribadi, 2026"></div>
+    </div>
+    <div class="foto-grid">
+      <div class="slot-foto" data-file="foto/mikoriza-melinda.jpg" data-cap="Mikroskopis mikoriza<br>(Melinda <i>et al.</i>, 2023)"></div>
+      <div class="slot-foto" data-file="foto/mikoriza.jpg" data-cap="Mikoriza<br>Dokumentasi pribadi, 2026"></div>
+    </div>
+  </details>
+</section>
+
+<!-- PERAN -->
+<section id="peran">
+  <h2>Peran Jamur dalam Kehidupan</h2>
+  <div class="peran">
+    <div class="kartu untung">
+      <h3>✅ Menguntungkan</h3>
+      <ul>
+        <li><b>Pangan fermentasi</b>: tempe (<i>Rhizopus</i>), oncom (<i>Neurospora</i>), tape &amp; roti (<i>Saccharomyces</i>), kecap.</li>
+        <li><b>Bahan pangan</b>: jamur tiram, merang, kuping, dan shiitake.</li>
+        <li><b>Obat</b>: antibiotik penisilin dari <i>Penicillium notatum</i>.</li>
+        <li><b>Dekomposer</b>: menguraikan sisa organisme sehingga unsur hara kembali ke tanah.</li>
+        <li><b>Simbiosis</b>: mikoriza dan lichen.</li>
+      </ul>
+    </div>
+    <div class="kartu rugi">
+      <h3>⚠️ Merugikan</h3>
+      <ul>
+        <li><b>Penyakit manusia</b>: kandidiasis (<i>Candida albicans</i>), kurap/panu (<i>Trichophyton</i>, <i>Epidermophyton</i>).</li>
+        <li><b>Penyakit tanaman</b>: karat dan busuk akar oleh berbagai jamur patogen.</li>
+        <li><b>Toksin</b>: <i>Aspergillus flavus</i> menghasilkan aflatoksin pada kacang dan jagung yang disimpan lembap.</li>
+        <li><b>Pembusukan</b>: merusak makanan, kayu, dan kain.</li>
+        <li><b>Jamur beracun</b>: sebagian jenis <i>Amanita</i>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="game">
+  <h2>Game Jamur 🎮</h2>
+
+  <div class="kartu">
+    <h3>1. Kartu Pasangan</h3>
+    <p>Balik dua kartu. Cocokkan <b>nama jamur</b> dengan <b>peran atau hasilnya</b>.</p>
+    <div class="memori" id="memori"></div>
+    <div class="bar"><span id="langkah">Langkah: 0</span><button class="btn" id="ulangMemori" style="margin:0">Acak Ulang</button></div>
+    <p id="menangMemori" style="text-align:center;font-weight:700;margin-top:8px"></p>
+  </div>
+
+  <div class="kartu">
+    <h3>2. Flashcard Istilah</h3>
+    <p>Klik kartu untuk melihat artinya.</p>
+    <div class="flash" id="flash"></div>
+    <div class="bar">
+      <button class="btn" id="sebelum" style="margin:0">◀</button>
+      <span id="nomorFlash"></span>
+      <button class="btn" id="sesudah" style="margin:0">▶</button>
+    </div>
+  </div>
+
+  <div class="kartu game-luar">
+    <h3>3. Game Tambahan</h3>
+    <div id="gameLuarWadah"></div>
+  </div>
+</section>
+
+<!-- KUIS -->
+<section id="kuis">
+  <h2>Kuis Jamur 🎯</h2>
+  <p>Pilih satu jawaban pada tiap soal. Jawaban langsung dicek.</p>
+  <div id="soalWadah"></div>
+  <button class="btn" id="ulang">Ulangi Kuis</button>
+  <div id="hasil"></div>
+</section>
+
+</main>
+
+<footer>
+  © 2026 · Dibuat oleh Misfalah Arum Syandana &amp; Syarifatun Nafisah · Media pembelajaran MycoEd Biologi Kelas X
+</footer>
+
+<script>
+  // ===== Navigasi tab =====
+  const tombol = document.querySelectorAll('#menu button');
+  const bagian = document.querySelectorAll('main section');
+  tombol.forEach(b => b.addEventListener('click', () => {
+    tombol.forEach(x => x.classList.remove('aktif'));
+    bagian.forEach(s => s.classList.remove('aktif'));
+    b.classList.add('aktif');
+    document.getElementById(b.dataset.tab).classList.add('aktif');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+
+  // ===== Diagram interaktif =====
+  const info = {
+    tudung:["Tudung (pileus)","Bagian atas tubuh buah yang melindungi bilah di bawahnya. Warna dan bentuknya sering dipakai untuk mengenali jenis jamur."],
+    bilah:["Bilah (lamela)","Lembaran tipis di bawah tudung. Pada Basidiomycota, di sinilah basidium menghasilkan basidiospora."],
+    cincin:["Cincin (annulus)","Sisa selaput pelindung bilah muda. Tidak semua jamur memilikinya."],
+    batang:["Batang (stipe)","Menopang tudung dan mengangkatnya agar spora mudah tersebar oleh angin."],
+    miselium:["Miselium &amp; hifa","Jalinan hifa di dalam tanah atau substrat. Berfungsi menyerap nutrisi: hifa mengeluarkan enzim pencernaan lalu menyerap hasil pencernaannya."]
+  };
+  document.querySelectorAll('.hotspot').forEach(el => el.addEventListener('click', () => {
+    const [judul, isi] = info[el.dataset.info];
+    document.getElementById('infoBagian').innerHTML = `<h3>${judul}</h3><p>${isi}</p>`;
+  }));
+
+  // ===== Kuis =====
+  const bank = [
+    {q:"Dinding sel jamur tersusun dari ...", o:["Selulosa","Kitin","Peptidoglikan","Lignin"], a:1, e:"Dinding sel jamur dari kitin; selulosa pada tumbuhan, peptidoglikan pada bakteri."},
+    {q:"Cara memperoleh makanan pada jamur adalah ...", o:["Autotrof fotosintesis","Autotrof kemosintesis","Heterotrof dengan menyerap nutrisi","Memangsa dengan menelan"], a:2, e:"Jamur heterotrof: mengeluarkan enzim lalu menyerap hasil pencernaan."},
+    {q:"Jalinan hifa yang membentuk tubuh jamur disebut ...", o:["Miselium","Sporangium","Askus","Stipe"], a:0, e:"Kumpulan hifa membentuk miselium."},
+    {q:"Rhizopus oligosporus berperan dalam pembuatan ...", o:["Tape","Oncom","Tempe","Roti"], a:2, e:"Tempe dibuat dari kedelai yang difermentasi Rhizopus."},
+    {q:"Spora seksual yang terbentuk di dalam kantong (askus) adalah ...", o:["Zigospora","Basidiospora","Konidiospora","Askospora"], a:3, e:"Askospora dihasilkan di dalam askus oleh Ascomycota."},
+    {q:"Simbiosis mutualisme antara jamur dan alga disebut ...", o:["Mikoriza","Lichen","Parasitisme","Saprofit"], a:1, e:"Lichen (lumut kerak) adalah simbiosis jamur dengan alga/sianobakteri."},
+    {q:"Jamur yang menghasilkan antibiotik penisilin adalah ...", o:["Penicillium notatum","Candida albicans","Amanita","Volvariella volvacea"], a:0, e:"Penisilin ditemukan dari Penicillium notatum."},
+    {q:"Hifa Rhizopus tidak bersekat sehingga disebut hifa ...", o:["Septat","Senositik","Haploid","Vegetatif saja"], a:1, e:"Hifa tanpa sekat disebut senositik (koenositik)."},
+    {q:"Alat reproduksi aseksual pada Zygomycota (misalnya Rhizopus) adalah ...", o:["Konidia","Sporangiospora","Askospora","Basidiospora"], a:1, e:"Zygomycota membentuk sporangiospora di dalam sporangium. Konidia adalah ciri Ascomycota dan Deuteromycota."},
+    {q:"Konidia termasuk spora ...", o:["Seksual, hasil meiosis","Aseksual, terbentuk tanpa peleburan inti","Seksual, hasil konjugasi","Seksual, dibentuk di dalam askus"], a:1, e:"Konidia adalah spora aseksual yang terbentuk di ujung konidiofor tanpa plasmogami, kariogami, dan meiosis."},
+    {q:"Jamur yang fase seksualnya belum diketahui dan hanya berkembang biak dengan konidia dikelompokkan dalam ...", o:["Zygomycota","Ascomycota","Basidiomycota","Deuteromycota"], a:3, e:"Itulah ciri Deuteromycota (jamur imperfecti). Jika fase seksualnya ditemukan, jamur dipindahkan ke Ascomycota atau Basidiomycota."},
+    {q:"Jamur yang memiliki tudung dan hifa bersekat termasuk divisi ...", o:["Basidiomycota","Ascomycota","Zygomycota","Deuteromycota"], a:0, e:"Basidiomycota berhifa bersekat dan membentuk tubuh buah berbentuk payung (bertudung) dengan basidium pada bilahnya. Zygomycota berhifa tidak bersekat."},
+    {q:"Urutan tahapan dari reproduksi seksual pada jamur adalah ...", o:["Plasmogami - Meiosis - Kariogami","Kariogami - Meiosis - Plasmogami","Plasmogami - Kariogami - Meiosis","Meiosis - Plasmogami - Kariogami"], a:2, e:"Sitoplasma melebur lebih dulu (plasmogami), lalu inti melebur (kariogami), kemudian meiosis menghasilkan spora seksual."},
+    {q:"Reproduksi secara aseksual dapat ditandai dengan, kecuali ...", o:["Pembelahan/Pertunasan","Fragmentasi","Pembentukan spora","Peleburan sitoplasma"], a:3, e:"Peleburan sitoplasma (plasmogami) adalah tahap reproduksi seksual. Pertunasan, fragmentasi, dan pembentukan spora aseksual terjadi tanpa peleburan sel."},
+    {q:"Berikut ini yang merupakan peran jamur yang merugikan adalah ...", o:["Penicillium notatum penghasil antibiotik","Candida albicans penyebab kandidiasis","Saccharomyces cerevisiae pada pembuatan tape","Rhizopus oligosporus pada pembuatan tempe"], a:1, e:"Candida albicans dapat menyebabkan penyakit kandidiasis pada manusia. Ketiga pilihan lainnya adalah peran jamur yang menguntungkan."}
+  ];
+  const wadah = document.getElementById('soalWadah'), hasil = document.getElementById('hasil');
+  let skor, terjawab;
+  function mulai(){
+    skor = 0; terjawab = 0; hasil.textContent = ''; wadah.innerHTML = '';
+    bank.forEach((s,i) => {
+      const d = document.createElement('div'); d.className = 'kartu soal';
+      d.innerHTML = `<b>${i+1}. ${s.q}</b>`;
+      s.o.forEach((t,j) => {
+        const b = document.createElement('button'); b.className = 'opsi'; b.textContent = t;
+        b.onclick = () => jawab(d,b,s,j);
+        d.appendChild(b);
+      });
+      const p = document.createElement('div'); p.className = 'penjelasan'; p.textContent = '💬 ' + s.e;
+      d.appendChild(p); wadah.appendChild(d);
+    });
+  }
+  function jawab(d,b,s,j){
+    const semua = d.querySelectorAll('.opsi');
+    semua.forEach(x => x.disabled = true);
+    semua[s.a].classList.add('benar');
+    if(j === s.a) skor++; else b.classList.add('salah');
+    d.querySelector('.penjelasan').style.display = 'block';
+    if(++terjawab === bank.length){
+      const nilai = Math.round(skor / bank.length * 100);
+      const pesan = nilai >= 80 ? "Hebat! 🎉" : nilai >= 60 ? "Bagus, tinggal sedikit lagi! 👍" : "Ayo pelajari materinya lagi! 💪";
+      hasil.textContent = `Skor: ${skor}/${bank.length} (nilai ${nilai}). ${pesan}`;
+    }
+  }
+  document.getElementById('ulang').onclick = mulai;
+  mulai();
+
+  // =====================================================
+  // PENGATURAN YANG MUDAH DIUBAH
+  // =====================================================
+
+  // Foto: simpan file di folder "foto" (sebelah index.html).
+  // Jika foto belum ada: false = kotak foto disembunyikan (untuk dipublikasikan),
+  // true = tampil kotak putus-putus berisi nama file yang dibutuhkan (untuk mengedit).
+  const TAMPILKAN_PLACEHOLDER = false;
+
+  // Game dari platform lain (Genially, Wordwall, dsb).
+  // Isi url dengan link EMBED dari platform. Kosongkan jika belum ada.
+  const GAME_LUAR = [
+    // {judul:'Game Klasifikasi Jamur', url:'https://wordwall.net/embed/xxxxxx'}
+  ];
+
+  // =====================================================
+  // FOTO OTOMATIS (galeri + slot foto di materi)
+  // =====================================================
+  document.querySelectorAll('.slot-foto').forEach(el => {
+    const f = el.dataset.file, c = el.dataset.cap || '';
+    const alt = c.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    el.innerHTML = `<figure><img src="${f}" alt="${alt}">${c ? `<figcaption>${c}</figcaption>` : ''}</figure>`;
+    el.querySelector('img').onerror = () => {
+      if(TAMPILKAN_PLACEHOLDER){
+        el.innerHTML = `<div class="kosong">📷 Foto belum ditambahkan<br><small>Simpan fotomu dengan nama <b>${f}</b> di folder foto</small></div>`;
+      } else {
+        el.remove();
+      }
+    };
+  });
+
+  // =====================================================
+  // GAME 1: KARTU PASANGAN
+  // =====================================================
+  const PASANGAN = [
+    ['Rhizopus','Tempe'],['Neurospora','Oncom'],['Saccharomyces','Tape &amp; roti'],
+    ['Penicillium','Antibiotik penisilin'],['Candida albicans','Kandidiasis'],['Volvariella volvacea','Jamur merang']
+  ];
+  const memori = document.getElementById('memori');
+  let terbuka, langkah, terkunci, cocokJumlah;
+  function acak(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+  function mulaiMemori(){
+    terbuka = []; langkah = 0; terkunci = false; cocokJumlah = 0;
+    document.getElementById('langkah').textContent = 'Langkah: 0';
+    document.getElementById('menangMemori').textContent = '';
+    memori.innerHTML = '';
+    const kartu = [];
+    PASANGAN.forEach((p,i) => { kartu.push({id:i,t:p[0]}); kartu.push({id:i,t:p[1]}); });
+    acak(kartu).forEach(k => {
+      const b = document.createElement('button');
+      b.className = 'kartu-m'; b.dataset.id = k.id;
+      b.innerHTML = `<div class="dalam"><div class="muka depan">🍄</div><div class="muka belakang">${k.t}</div></div>`;
+      b.onclick = () => balik(b);
+      memori.appendChild(b);
+    });
+  }
+  function balik(b){
+    if(terkunci || b.classList.contains('buka') || b.classList.contains('cocok')) return;
+    b.classList.add('buka'); terbuka.push(b);
+    if(terbuka.length === 2){
+      langkah++; document.getElementById('langkah').textContent = 'Langkah: ' + langkah;
+      const [a,c] = terbuka;
+      if(a.dataset.id === c.dataset.id){
+        a.classList.add('cocok'); c.classList.add('cocok'); terbuka = []; cocokJumlah++;
+        if(cocokJumlah === PASANGAN.length)
+          document.getElementById('menangMemori').textContent = `🎉 Selesai dalam ${langkah} langkah!`;
+      } else {
+        terkunci = true;
+        setTimeout(() => { a.classList.remove('buka'); c.classList.remove('buka'); terbuka = []; terkunci = false; }, 900);
+      }
+    }
+  }
+  document.getElementById('ulangMemori').onclick = mulaiMemori;
+  mulaiMemori();
+
+  // =====================================================
+  // GAME 2: FLASHCARD
+  // =====================================================
+  const ISTILAH = [
+    ['Hifa','Benang-benang halus penyusun tubuh jamur.'],
+    ['Miselium','Jalinan atau kumpulan hifa.'],
+    ['Kitin','Zat penyusun dinding sel jamur.'],
+    ['Septa','Sekat melintang pada hifa bersekat.'],
+    ['Hifa senositik','Hifa tanpa sekat; inti tersebar dalam sitoplasma yang menyatu.'],
+    ['Saprofit','Organisme yang menyerap nutrisi dari sisa makhluk hidup yang mati.'],
+    ['Zigospora','Spora seksual Zygomycota hasil konjugasi.'],
+    ['Askus','Kantong tempat terbentuknya askospora pada Ascomycota.'],
+    ['Basidium','Struktur pembentuk basidiospora pada Basidiomycota.'],
+    ['Mikoriza','Simbiosis jamur dengan akar tumbuhan.'],
+    ['Lichen','Simbiosis jamur dengan alga atau sianobakteri.']
+  ];
+  let fi = 0, fbalik = false;
+  const flash = document.getElementById('flash');
+  function tampilFlash(){
+    flash.classList.toggle('balik', fbalik);
+    flash.textContent = fbalik ? ISTILAH[fi][1] : ISTILAH[fi][0];
+    document.getElementById('nomorFlash').textContent = (fi+1) + ' / ' + ISTILAH.length;
+  }
+  flash.onclick = () => { fbalik = !fbalik; tampilFlash(); };
+  document.getElementById('sebelum').onclick = () => { fi = (fi - 1 + ISTILAH.length) % ISTILAH.length; fbalik = false; tampilFlash(); };
+  document.getElementById('sesudah').onclick = () => { fi = (fi + 1) % ISTILAH.length; fbalik = false; tampilFlash(); };
+  tampilFlash();
+
+  // =====================================================
+  // GAME 3: GAME DARI PLATFORM LAIN
+  // =====================================================
+  const gl = document.getElementById('gameLuarWadah');
+  if(GAME_LUAR.length){
+    GAME_LUAR.forEach(g => {
+      gl.innerHTML += `<h4 style="margin:10px 0 6px">${g.judul}</h4><iframe src="${g.url}" allowfullscreen loading="lazy"></iframe><p style="font-size:.85rem"><a href="${g.url}" target="_blank" rel="noopener">Buka di tab baru</a></p>`;
+    });
+  } else if(TAMPILKAN_PLACEHOLDER){
+    gl.innerHTML = '<div class="kosong">🎲 Belum ada game tambahan.<br><small>Isi daftar GAME_LUAR di bagian bawah file index.html dengan link embed dari Genially, Wordwall, atau platform lain.</small></div>';
+  } else {
+    gl.closest('.kartu').remove();
+  }
+</script>
+</body>
+</html>
